@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS Diary;
+
+CREATE TABLE Diary (
+    DiaryID INT GENERATED ALWAYS AS IDENTITY,
+    Words VARCHAR(500) NOT NULL,
+    Date DATE DEFAULT CURRENT_DATE,
+    Time TIME DEFAULT CURRENT_TIME,
+    category VARCHAR(100) NOT NULL,
+    PRIMARY KEY (DiaryID)
+);
+
+INSERT INTO Diary(Words, category) VALUES ('Testing','Test'), ('ABCDE', 'ABC'), ('12345', '123');
+
