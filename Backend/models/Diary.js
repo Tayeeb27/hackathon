@@ -46,11 +46,13 @@ class Diary {
     }
 
     static async create(data) {
+        try{
         const { words, category } = data;
         const response = await db.query("INSERT INTO diary (words, category) VALUES ($1, $2) RETURNING *;", [words, category]);
-        const id = response.rows[0].id;
-        const newDiary = await Diary.getOneByID(id);
-        return new Diary(newDiary);
+        return new Diary(response.rows);
+        }catch (err) {
+            throw new Error(err.message)
+        }
     }
 
     async update(data) {
