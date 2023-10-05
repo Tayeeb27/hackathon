@@ -53,14 +53,15 @@ class Diary {
         return new Diary(newDiary);
     }
 
-    // async update(data) {
-    //     const response = await db.query("UPDATE diary SET capital = $1 WHERE name = $2 RETURNING name, capital;",
-    //         [ data.capital, this.name ]);
-    //     if (response.rows.length != 1) {
-    //         throw new Error("Unable to update capital.")
-    //     }
-    //     return new Diary(response.rows[0]);
-    // }
+    async update(data) {
+        const { words } = data
+        const response = await db.query("UPDATE diary SET words = $1 WHERE DiaryID = $2 RETURNING *;",
+            [ words, this.diaryid ]);
+        if (response.rows.length != 1) {
+            throw new Error("Unable to update capital.")
+        }
+        return new Diary(response.rows[0]);
+    }
 
     async destroy() {
         const response = await db.query("DELETE FROM diary WHERE DiaryID = $1 RETURNING *;", [this.diaryid]);

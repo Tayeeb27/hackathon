@@ -52,9 +52,9 @@ async function create (req, res) {
 
 async function update (req, res) {
     try {
-        const name = req.params.name.toLowerCase()
+        const id = parseInt(req.params.id);
         const data = req.body;
-        const diary = await Diary.getOneByCountryName(name);
+        const diary = await Diary.getOneByID(id);
         const result = await diary.update(data);
         res.status(200).json(result);
     } catch (err) {
