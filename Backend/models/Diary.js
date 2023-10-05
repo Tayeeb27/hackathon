@@ -1,26 +1,42 @@
 const db = require('../db/connect');
 
 class Diary {
-    constructor({country_id, name, capital, population, languages, fun_fact, map_image_url}) {
-        this.country_id = country_id
-        this.name = name
-        this.capital = capital
-        this.population = population
-        this.languages = languages
-        this.fun_fact = fun_fact
-        this.map_image_url = map_image_url
+    constructor({diaryid, words, date, time, category}) {
+        this.diaryid = diaryid
+        this.words = words
+        this.date = date
+        this.time = time
+        this.category = category
     }
 
     static async getAll() {
-        const response = await db.query("SELECT name FROM diary;");
+        const response = await db.query("SELECT * FROM Diary ORDER BY Date, Time;");
         if (response.rows.length === 0) {
-            throw new Error("No countries available.")
+            throw new Error("No diary entries available.")
         }
-        return response.rows.map(c => new Diary(c));
+        return response.rows.map(d => new Diary(d));
     }
 
-    static async getOneByCountryName(countryName) {
-        const response = await db.query("SELECT * FROM diary WHERE LOWER(name) = $1;", [countryName]);
+    static async getOneByID(id) {
+        const response = await db.query("SELECT * FROM diary WHERE DiaryID = $1;", [id]);
+        if(response.rows.length != 1) {
+            throw new Error("Unable to locate diary.")
+        }
+
+        return new Diary(response.rows[0]);
+    }
+
+    static async getOneByDate(date) {
+        const response = await db.query("SELECT * FROM diary WHERE TO_CHAR(Date, 'YYYY-MM-DD') = $1;", [date]);
+        if(response.rows.length != 1) {
+            throw new Error("Unable to locate diary.")
+        }
+
+        return new Diary(response.rows[0]);
+    }
+
+    static async getOneByCategory(category) {
+        const response = await db.query("SELECT * FROM diary WHERE LOWER(category) = $1;", [category]);
 
         if(response.rows.length != 1) {
             throw new Error("Unable to locate diary.")
@@ -30,16 +46,17 @@ class Diary {
     }
 
     static async create(data) {
-        const { name, capital, population, languages } = data;
-        const response = await db.query("INSERT INTO diary (name, capital, population, languages) VALUES ($1, $2, $3, $4) RETURNING name;", [name, capital, population, languages]);
-        const countryName = response.rows[0].name;
-        const newCountry = await Diary.getOneByCountryName(countryName);
-        return new Diary(newCountry);
+        const { words, category } = data;
+        const response = await db.query("INSERT INTO diary (words, category) VALUES ($1, $2) RETURNING *;", [words, category]);
+        const id = response.rows[0].id;
+        const newDiary = await Diary.getOneByID(id);
+        return new Diary(newDiary);
     }
 
     async update(data) {
-        const response = await db.query("UPDATE diary SET capital = $1 WHERE name = $2 RETURNING name, capital;",
-            [ data.capital, this.name ]);
+        const { words } = data
+        const response = await db.query("UPDATE diary SET words = $1 WHERE DiaryID = $2 RETURNING *;",
+            [ words, this.diaryid ]);
         if (response.rows.length != 1) {
             throw new Error("Unable to update capital.")
         }
@@ -47,7 +64,7 @@ class Diary {
     }
 
     async destroy() {
-        const response = await db.query("DELETE FROM diary WHERE name = $1 RETURNING *;", [this.name]);
+        const response = await db.query("DELETE FROM diary WHERE DiaryID = $1 RETURNING *;", [this.diaryid]);
         return new Diary(response.rows[0]);
     }
 }
