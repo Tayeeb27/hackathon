@@ -17,7 +17,7 @@ h2 {
     text-align: center;
     margin-bottom: 20px;
 }
-#text{
+#words{
     width: 95%;
     height: 100px;;
     padding: 10px;
@@ -53,4 +53,7 @@ input[type="submit"]:hover {
     padding-bottom: 20px;
     padding: 20px;   
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.post{
+    border: 1px solid;
 }

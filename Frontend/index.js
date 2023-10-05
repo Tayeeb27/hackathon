@@ -12,9 +12,9 @@ function createPostElement (data) {
     category.textContent = data["category"];
     post.appendChild(category);
 
-    // const deletePost = document.createElement("button"); //maybe dont need this here
-    // deletePost.textContent = "Delete";
-    // post.appendChild(deletePost);
+    const deletePost = document.createElement("button"); //maybe dont need this here
+    deletePost.textContent = "Delete";
+    post.appendChild(deletePost);
 
     return post;
 }
@@ -24,23 +24,24 @@ function createPostElement (data) {
 
 
 async function loadDiary () {
-    
-    const response = await fetch("http://localhost:3000/diary");
-    
-    if (response.status == 200) {
-        const posts = await response.json();
+    try {
+      const response = await fetch("http://localhost:3000/diary");
+      const posts = await response.json();
+        console.log(posts);
+      if (response.status == 200) {
         const container = document.getElementById("posts");
-
+  
         posts.forEach(p => {
-            const elem = createPostElement(p);
-            container.appendChild(elem);
-        })
-
-    } else {
+          const elem = createPostElement(p);
+          container.appendChild(elem);
+        });
+      } else {
         window.location.assign("./index.html");
+      }
+    } catch (error) {
+      console.log(error);
     }
-
-}
+  }
 loadDiary()
 
 
@@ -50,24 +51,24 @@ loadDiary()
 
 document.getElementById("diaryForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    const form = new FormData(e.target);
-
+    const words = document.querySelector('#words')
+    const category = document.querySelector('#category')
+    const diaryForm = document.querySelector('#diaryForm')
+    const form = {words:words.value, category:category.value};
+    console.log(form)
     const options = {
         method: "POST",
         headers: {
-            'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            title: form.get("title"),
-            content: form.get("content")
-        })
+        body: JSON.stringify(form)
     }
 
     const result = await fetch("http://localhost:3000/diary", options);
 
     if (result.status == 201) {
+        alert("Entry Entered successfully")
         window.location.reload();
+        diaryForm.reset()
     }
 })
