@@ -96,7 +96,7 @@ document.getElementById("diaryForm").addEventListener("submit", async (e) => {
 
 const datePicker = document.querySelector("#searchdate")
 
-datePicker.addEventListener("click", async(e)=>{
+datePicker.addEventListener("change", async(e)=>{
 
   try {
     const response = await fetch(`http://localhost:3000/diary/date/${e.target.value}`);
@@ -105,10 +105,12 @@ datePicker.addEventListener("click", async(e)=>{
       const container = document.getElementById("posts");
 
       container.innerHTML = "";
+      
       posts.forEach(p => {
         const elem = createPostElement(p);
         container.appendChild(elem);
       });
+      datePicker.value = "";
     } else {
     }
   } catch (error) {
@@ -124,6 +126,7 @@ category. addEventListener('click', async(e)=>{
     if (response.status == 200) {
       const container = document.getElementById("posts");
       container.innerHTML = "";
+      category.textContent = "";
       posts.forEach(p => {
         const elem = createPostElement(p);
         container.appendChild(elem);

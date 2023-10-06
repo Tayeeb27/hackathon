@@ -32,7 +32,6 @@ async function showCategory (req, res) {
 async function showDate (req, res) {
     try {
         let date = req.params.date;
-        console.log(date)
         const diary = await Diary.getAllByDate(date);
         res.status(200).json(diary)
     } catch(err) {

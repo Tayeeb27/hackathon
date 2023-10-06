@@ -28,7 +28,6 @@ class Diary {
 
     static async getAllByDate(date) {
         const response = await db.query("SELECT * FROM diary WHERE TO_CHAR(Date, 'YYYY-MM-DD') = $1;", [date]);
-        console.log(response)
         if(response.rows.length === 0) {
             throw new Error("Unable to locate diary.")
         }
