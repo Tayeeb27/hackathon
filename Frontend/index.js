@@ -15,6 +15,15 @@ function createPostElement (data) {
   const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   dateP.textContent = formattedDate;
   post.appendChild(dateP);
+  const timeP = document.createElement("p");
+  const sqlTime = data["time"];
+  const [hours, minutes, seconds] = sqlTime.split(":");
+
+  // Format the time in your desired way
+  const formattedTime = `${hours}:${minutes}`;
+  
+  timeP.textContent = formattedTime;
+  post.appendChild(timeP);
 /////////////////DELETE POST
   const deletePost = document.createElement("button"); 
   deletePost.textContent = "Delete";
@@ -58,7 +67,7 @@ async function loadDiary () {
         container.appendChild(elem);
       });
     } else {
-      window.location.assign("./index.html");
+      //window.location.assign("./index.html");
     }
   } catch (error) {
     console.log(error);
