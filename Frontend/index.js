@@ -11,7 +11,15 @@ function createPostElement (data) {
     const category = document.createElement("p");
     category.textContent = data["category"];
     post.appendChild(category);
-
+    const date = document.createElement("p")
+    // Assuming you have fetched the date from your SQL table and stored it in a variable
+    const sqlDate = data["date"];
+    // Create a Date object from the SQL date string
+    const dates = new Date(sqlDate);
+    // Format the date as a string in your desired format
+    const formattedDate = `${dates.getFullYear()}-${(dates.getMonth() + 1).toString().padStart(2, '0')}-${dates.getDate().toString().padStart(2, '0')}`;
+    date.textContent = formattedDate;
+    post.appendChild(date);
     const deletePost = document.createElement("button"); //maybe dont need this here
     deletePost.textContent = "Delete";
     post.appendChild(deletePost);
