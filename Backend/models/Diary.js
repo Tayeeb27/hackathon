@@ -35,22 +35,24 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
-    static async getOneByCategory(category) {
+    static async getAllByCategory(category) {
         const response = await db.query("SELECT * FROM diary WHERE LOWER(category) = $1;", [category]);
 
-        if(response.rows.length != 1) {
+        if(response.rows.length === 0) {
             throw new Error("Unable to locate diary.")
         }
 
-        return new Diary(response.rows[0]);
+        return response.rows.map(d => new Diary(d));;
     }
 
     static async create(data) {
+        try{
         const { words, category } = data;
         const response = await db.query("INSERT INTO diary (words, category) VALUES ($1, $2) RETURNING *;", [words, category]);
-        const id = response.rows[0].id;
-        const newDiary = await Diary.getOneByID(id);
-        return new Diary(newDiary);
+        return new Diary(response.rows);
+        }catch (err) {
+            throw new Error(err.message)
+        }
     }
 
     async update(data) {

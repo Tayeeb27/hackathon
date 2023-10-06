@@ -22,7 +22,7 @@ async function showID (req, res) {
 async function showCategory (req, res) {
     try {
         let category = req.params.category.toLowerCase();
-        const diary = await Diary.getOneByCategory(category);
+        const diary = await Diary.getAllByCategory(category);
         res.status(200).json(diary)
     } catch(err) {
         res.status(404).json({error: err.message})
