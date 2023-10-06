@@ -47,6 +47,17 @@ function createPostElement (data) {
   }
     
   })
+  const editPost = document.createElement("button");
+  editPost.textContent = "Edit";
+  editPost.value = data["diaryid"];
+  post.appendChild(editPost);
+
+// Add a click event listener to the "Edit" button
+  editPost.addEventListener("click", () => {
+    // Display an edit form with the current post content
+    displayEditForm(data);
+});
+
 
   return post;
 }
@@ -147,3 +158,51 @@ category. addEventListener('click', async(e)=>{
   }
 })
 
+function displayEditForm(data) {
+  // Assuming you have a form element with an ID "editForm" in your HTML
+  const editForm = document.getElementById("editForm");
+
+  // Populate the form with the current post data
+  document.querySelector('#editWords').value = data.words;
+  document.querySelector('#editCategory').value = data.category;
+
+  // Show the edit form
+  editForm.style.display = "block";
+
+  // Add a submit event listener to the edit form
+  editForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const editedWords = document.querySelector('#editWords').value;
+      const editedCategory = document.querySelector('#editCategory').value;
+
+      // Send an HTTP request to update the post on the server
+      const updatedData = {
+          words: editedWords,
+          category: editedCategory
+      };
+
+      const options = {
+          method: "PATCH", // Use the appropriate HTTP method for updating
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedData)
+      };
+
+      try {
+          const response = await fetch(`http://localhost:3000/diary/${data.diaryid}`, options);
+          if (response.status == 200) {
+              alert("Post updated successfully");
+              
+              window.location.reload();
+          } else {
+              alert("Error updating post");
+          }
+      } catch (error) {
+          console.log("Error", error);
+      }
+
+      // Hide the edit form
+      editForm.style.display = "none";
+  });
+}
