@@ -19,10 +19,19 @@
         <button id="submit">Submit</button>
     </form>
     <input type="date" id="searchdate" name="searchdate">
-    <input type=" text"id="category" placeholder="Category">
+    <input type=" text"id="searchcategory" placeholder="Category">
     
     <div class="container" id="posts">
 
     </div>
+    <form id="editForm">
+        <!-- Your input fields and other form elements go here -->
+        <label for="editWords">Edit Words:</label>
+        <input type="text" id="editWords" name="editWords">
+        <label for="editWords">Category:</label>
+        <input type="text" id="editCategory" name="editCategory" readonly>
+        <input type="submit" value="Save">
+    </form>
+    
 </body>
 </html>

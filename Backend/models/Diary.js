@@ -10,7 +10,7 @@ class Diary {
     }
 
     static async getAll() {
-        const response = await db.query("SELECT * FROM Diary ORDER BY Date, Time;");
+        const response = await db.query("SELECT * FROM Diary ORDER BY Date, Time DESC;");
         if (response.rows.length === 0) {
             throw new Error("No diary entries available.")
         }
@@ -26,18 +26,17 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
-    static async getOneByDate(date) {
+    static async getAllByDate(date) {
         const response = await db.query("SELECT * FROM diary WHERE TO_CHAR(Date, 'YYYY-MM-DD') = $1;", [date]);
-        if(response.rows.length != 1) {
+        if(response.rows.length === 0) {
             throw new Error("Unable to locate diary.")
         }
 
-        return new Diary(response.rows[0]);
+        return response.rows.map(d => new Diary(d));
     }
 
     static async getAllByCategory(category) {
         const response = await db.query("SELECT * FROM diary WHERE LOWER(category) = $1;", [category]);
-
         if(response.rows.length === 0) {
             throw new Error("Unable to locate diary.")
         }
