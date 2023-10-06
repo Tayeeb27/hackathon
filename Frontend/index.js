@@ -18,9 +18,9 @@ function createPostElement (data) {
   const timeP = document.createElement("p");
   const sqlTime = data["time"];
   const [hours, minutes, seconds] = sqlTime.split(":");
-
+  const hoursPlus1 = parseInt(hours,10) +1
   // Format the time in your desired way
-  const formattedTime = `${hours}:${minutes}`;
+  const formattedTime = `${hoursPlus1}:${minutes}`;
   
   timeP.textContent = formattedTime;
   post.appendChild(timeP);
