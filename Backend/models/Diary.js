@@ -56,10 +56,10 @@ class Diary {
 
     async update(data) {
         const { words } = data
-        const response = await db.query("UPDATE diary SET words = $1 WHERE DiaryID = $2 RETURNING *;",
+        const response = await db.query("UPDATE diary SET words = $1, date = CURRENT_DATE, time = CURRENT_TIME WHERE DiaryID = $2 RETURNING *;",
             [ words, this.diaryid ]);
         if (response.rows.length != 1) {
-            throw new Error("Unable to update capital.")
+            throw new Error("Unable to update Diary.")
         }
         return new Diary(response.rows[0]);
     }
